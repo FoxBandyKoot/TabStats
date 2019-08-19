@@ -1,0 +1,6 @@
+FOR TESTS => 
+
+	mainwindow.cpp => 
+
+		CONSTRUCTOR
+		FUNCTION : on_pushButton_validate_clicked
