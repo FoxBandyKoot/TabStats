@@ -1,0 +1,37 @@
+﻿A FAIRE
+
+https://python-guide-pt-br.readthedocs.io/fr/latest/writing/structure.html
+
+Envoyer les donnees choisies : 
+	D'abord tester avec 0 parametres, puis 1 (fichier excel), puis 2 parametres (les noms) FAIT
+
+Analyser les donnees envoyees, si elles sont transmises sous format chaine, decoupees, en list ?
+	J'ai ecris les valeurs direct dans un fichier txt. FAIT
+	
+Recuperer le chemin du fichier de donnees a traiter. FAIT
+
+Recuperer le nom du compte utilisateur de la session. FAIT 
+
+NE PAS AVOIR A RENOMMER LE FICHIER
+
+FAIRE LA 2èME question
+
+Need refactor : verifNomsEmployes
+
+Faire des async tasks OU du multithread pour la q2 =< Pour augmenter les performances.
+Checkder les OS pour competences; car doit etre valide sur plusieurs OS.
+
+Developper des tests => Cours dans Programmation/Test
+Sessions de tests => Faire peter le logiciel
+
+Determiner la complexite algorithmique des 2 jets de la q2 !!! (memoire et temps)
+http://webcache.googleusercontent.com/search?q=cache:http://www.maths-algo.fr/algo/cours/cours_algo_cout_complexite.htm
+
+Ajouter une option pour calculer la question 1, sur 12 mois
+Ajouter une option pour calculer la question 2, sur 12 mois
+
+Remplacer la recherche des noms dans PYTHON par recursion
+
+- BUG : 
+
+Les noms d'une lettre font buguer l'application

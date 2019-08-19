@@ -1,0 +1,9 @@
+FOR TEST => 
+	
+	File ScriptTabStats.py =>
+
+		SECTION DATA FOR TESTS
+		FUNCTION __main__
+		FUNCTION selectionFichierExcel
+	
+
