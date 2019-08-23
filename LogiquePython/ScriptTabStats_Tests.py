@@ -3,8 +3,7 @@ import xlrd
 import sys
 import os
 import socket
-socket
-socket.socket
+import timeit
 
 ############################### DECLARATIONS ###############################
 
@@ -24,12 +23,12 @@ selectedEmployees = 'Chloé Mike'
 selectedEmployees = selectedEmployees.split()
 
 # DECOMMENT NEXT LINE FOR TESTS WITHOUT QT
-FileXLSX = "C:/Users/Charly/CloudStation/Projets/Perso/Tab_Stat_Employes/Data/"
+fileXLSX = "C:/Users/Charly/CloudStation/Projets/Perso/TabStats/Data/"
 
 ############################ END DATA FOR TESTS ############################
 
 def __main__(selectedEmployees, fileXLSX):
-
+    
     # COMMENT THESE NEXTS 3 LINES FOR TESTS WITHOUT QT
     # GET ARGUMENTS
     '''
@@ -43,10 +42,15 @@ def __main__(selectedEmployees, fileXLSX):
     TestFile.write(str(selectedEmployees))
     TestFile.close()
     '''
-    
 
+    '''
+
+    MAKE A FILE FOR EACH FUNCTIONALITY
+
+    '''
+
+    '''
     #First main functionnality : Checks input, do calcul, and return result
-
     resultVerif = Tabstats(selectedEmployees, fileXLSX)
     
     if (resultVerif != "error"): 
@@ -54,6 +58,15 @@ def __main__(selectedEmployees, fileXLSX):
         resultFile.write(str(resultVerif)) # Need a string  
         resultFile.close()
     return
+    '''
+    
+    #Secund functionnality : 
+    fullTable, employees = excelFileSelection(fileXLSX)
+    result = TS_9_employes_who_worked_the_most_together(selectedEmployees, employees)
+    print("result")
+    print(result)
+    return
+
 
 
 def Tabstats(selectedEmployees, fileXLSX):
@@ -85,7 +98,9 @@ def Tabstats(selectedEmployees, fileXLSX):
 def excelFileSelection(fileXLSX):
     '''
     Select the xlsx file then the sheet and open it. 
-    Then fill a table with data from the xlsx file.
+
+    Return : main_list => Table fill with data from the xlsx fil
+             employees => Header xlsx file
     '''
 
     dir = fileXLSX
@@ -105,14 +120,14 @@ def excelFileSelection(fileXLSX):
         employees.append(worksheet.cell(indexHeaderTab,y).value) 
     
     main_list = list() # main list
-    tamp_list = list() # temporary list
+    temp_list = list() # temporary list
     
     # Get the xlsx array (everything except the header)
     for x in range(lines)[1:]:
         for y in range(columns)[1:]:  # We first add the first line in a temporary array, then
-            tamp_list.append(worksheet.cell(x,y).value)
-        main_list.append(tamp_list)  # This line is added to the main table, then
-        tamp_list = [] # We clear the temporary array to get the next line
+            temp_list.append(worksheet.cell(x,y).value)
+        main_list.append(temp_list)  # This line is added to the main table, then
+        temp_list = [] # We clear the temporary array to get the next line
     return(main_list, employees)
 
 
@@ -125,15 +140,17 @@ def verifNameEmployees(selectedEmployees, employees, nbEmployeesSelected):
     missingNames = " "
     result = " "
     stateVerification = True
-    for i in range (len(selectedEmployees)): # For each employee chooses
-        for j in range (len(employees)):         # We go through each column
+    nbEmployees = len(employees)
+
+    for i in range (nbEmployeesSelected): # For each employee chooses
+        for j in range (nbEmployees):         # We go through each column
 
             # If the employee exists: OK go to next
             if(selectedEmployees[i] in employees[j]):
                 totalVerification += 1
                 break
 
-            if (j == len(employees)-1 and selectedEmployees[i] != employees[j]): # Pick up names that are not in the table
+            if (j == nbEmployees-1 and selectedEmployees[i] != employees[j]): # Pick up names that are not in the table
                     totalVerification += 1
                     missingNames += selectedEmployees[i] + " "
                     stateVerification = False
@@ -148,7 +165,6 @@ def verifNameEmployees(selectedEmployees, employees, nbEmployeesSelected):
             result = "Les noms suivants ne sont pas présents : " + missingNames
         
     return(result)
-
 
 
 def replaceNamesByNumbers(selectedEmployees, employees):
@@ -203,19 +219,56 @@ def howManyTimesSelectedWorkedTogether(fullTable, nbEmployeesSelected, selectedF
 
 #q2
 
-def Leplus():
-    L=combinliste(employees,9)
-    M=[]
-    for i in range (len(L)):
-        M+=[Tabstats(moisEnCours,L[i])]
-    maxi=maximum(M)
-    return(L[maxi])
+def TS_9_employes_who_worked_the_most_together(selectedEmployees, employees):
+    '''
+    MAIN F2
+    '''
+    nbEmployeesSelected = len(selectedEmployees)
+    verifNameEmployees(selectedEmployees, employees, nbEmployeesSelected)
+    return The_Most(employees)
 
-# donne toutes les combinaisons de x employés désirées.
-def combinliste(seq, k):
+def The_Most(employees):
+    '''
+
+    '''
+    print("employees")
+    print(employees)
+    
+    # Get all combinations of 9 desired employees
+    combin_list = get_combin_list(employees,9)
+    len_combin_list = len(combin_list)
+    print("combin_list")
+    print(combin_list)
+    
+    # REPLACE BY list() IF IT IS MORE FAST OR TO HAVE SAME CODE EVERYWHERE
+    how_much_work_together = []
+    for i in range (len_combin_list):
+        # OLD
+        #M += [Tabstats(moisEnCours, combin_list[i])]
+        
+        # NEW
+        how_much_work_together += [Tabstats(combin_list[i], fileXLSX)]
+
+    
+   #Tabstats(selectedEmployees, fileXLSX)
+    print("how_much_work_together")
+    print(how_much_work_together)
+    maxi = maximum(how_much_work_together)
+    print("maxi")
+    print(maxi)
+    return(combin_list[maxi])
+
+
+def get_combin_list(seq, k):
+    '''
+    Give all combinations of 9 desired employees  
+    '''
+
+    # REPLACE BY list() IF IT IS MORE FAST OR TO HAVE SAME CODE EVERYWHERE
     p = []
     i, imax = 0, 2**len(seq)-1
     while i<=imax:
+        print(i)
         s = []
         j, jmax = 0, len(seq)-1
         while j<=jmax:
@@ -224,28 +277,35 @@ def combinliste(seq, k):
             j += 1
         if len(s)==k:
             p.append(s)
+            print(s)
         i += 1 
     return p
     
     
 def maximum(selectedEmployees):
-     maxi=selectedEmployees[0]
-     indice=0
-     for i in range (len(selectedEmployees)):
-         if selectedEmployees[i]>maxi:
-             maxi=selectedEmployees[i]
-             indice=i
-     return(indice)
-     
-# "1er calcul : quelle fonction excel, permet de calculer combien de fois les employés sélectionnés (ex : Eric, Sarah, David, inès, Flora, Jean, Lydie) 
-# ont travaillé ensemble dans le mois. "																							
-# 																							
-# "2ème calcul : Quelle fonction excel ou quelle macro peut  permettre de savoir dans le tableau du mois concerné(voir sur 12 mois d'un tableau annuel)
-# quelles sont les 9 personnes qui ont travaillé le plus souvent ensemble "																							
+    '''
+    
+    '''
+    maxi = selectedEmployees[0]
+    indice=0
+    nbEmployeesSelected = len(selectedEmployees)
+
+    for i in range(nbEmployeesSelected):
+        if selectedEmployees[i]>maxi:
+            maxi = selectedEmployees[i]
+            indice = i
+    return(indice)
+ 																																												
 
 def error(resultVerif):
+    '''
+    Create a txt file and write the errors in it
+    '''
     resultFile = open("C:/Users/" + os.getlogin() + "/Documents/Resultats.txt", "w")
     resultFile.write(resultVerif)
     resultFile.close()
 
-__main__(selectedEmployees, fileXLSX)
+
+print("TIMING")
+
+print(timeit.timeit("__main__(selectedEmployees, fileXLSX)", "from __main__ import __main__, selectedEmployees, fileXLSX", number=1))

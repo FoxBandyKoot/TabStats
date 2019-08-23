@@ -1,0 +1,18 @@
+4037344
+4037345E04177.375: (while handling ('CMD_WRITE_TO_CONSOLE', 18128628))
+            Error handling pydevd event: {'type': 'event', 'event': 'output', 'body': {'output': '4037280', 'category': 'stdout', 'source': {}}, 'seq': 18128628, 'pydevd_cmd_id': 116}
+
+            Traceback (most recent call last):
+              File "c:\Users\Charly\.vscode\extensions\ms-python.python-2019.8.30787\pythonFiles\lib\python\ptvsd\wrapper.py", line 969, in on_pydevd_event
+                return f(self, seq, args)
+              File "c:\Users\Charly\.vscode\extensions\ms-python.python-2019.8.30787\pythonFiles\lib\python\ptvsd\wrapper.py", line 1298, in on_pydevd_cmd_write_to_console2
+                self.send_event('output', **body)
+              File "c:\Users\Charly\.vscode\extensions\ms-python.python-2019.8.30787\pythonFiles\lib\python\ptvsd\ipcjson.py", line 232, in send_event
+                body=kwargs,
+              File "c:\Users\Charly\.vscode\extensions\ms-python.python-2019.8.30787\pythonFiles\lib\python\ptvsd\ipcjson.py", line 95, in _send
+                self.__socket.send(content)
+            ConnectionResetError: [WinError 10054] Une connexion existante a dû être fermée par l’hôte distant
+
+
+
+4037346

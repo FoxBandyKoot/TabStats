@@ -24,7 +24,7 @@ selectedEmployees = ''
 #selectedEmployees = selectedEmployees.split()
 
 # DECOMMENT NEXT LINE FOR TESTS WITHOUT QT
-#fileXLSX = "C:/Users/Charly/CloudStation/Projets/Perso/Tab_Stat_Employes/Data/"
+#fileXLSX = "C:/Users/Charly/CloudStation/Projets/Perso/TabStats/Data/"
 
 ############################ END DATA FOR TESTS ############################
 
@@ -41,7 +41,6 @@ def __main__(selectedEmployees, fileXLSX):
     TestFile.write(str(selectedEmployees))
     TestFile.close()
     '''
-    os.system("start cmd")
 
     #First main functionnality : Checks input, do calcul, and return result
 
