@@ -14,10 +14,11 @@ selectedEmployees = ''
 ############################## DATA FOR TESTS ##############################
 
 # DECOMMENT ONE FOR TESTS
-#selectedEmployees = 'Fake1 Pierre Fake2 Lise Marie Fake3'
-#selectedEmployees = 'Pierre Lise'
-#selectedEmployees = 'Lise Pierre'
-selectedEmployees = 'Chloé Mike' 
+#selectedEmployees = 'Fake1 Pierre Fake2 Lise Marie Fake3' #6'
+#selectedEmployees = 'Pierre Lise' # 10 times together
+#selectedEmployees = 'Lise Pierre' # 10 times together
+#selectedEmployees = 'Chloé Mike' 
+selectedEmployees = 'David Inès' # 15 times together
 
 # DECOMMENT THIS FOR TESTS
 selectedEmployees = selectedEmployees.split()
@@ -63,8 +64,6 @@ def __main__(selectedEmployees, fileXLSX):
     #Secund functionnality : 
     fullTable, employees = excelFileSelection(fileXLSX)
     result = TS_9_employes_who_worked_the_most_together(selectedEmployees, employees)
-    print("result")
-    print(result)
     return
 
 
@@ -214,61 +213,68 @@ def howManyTimesSelectedWorkedTogether(fullTable, nbEmployeesSelected, selectedF
             total+=1
 
     total = str(total)
-
     return(total)
 
+
+
+
 #q2
+
+
 
 def TS_9_employes_who_worked_the_most_together(selectedEmployees, employees):
     '''
     MAIN F2
     '''
     nbEmployeesSelected = len(selectedEmployees)
-    verifNameEmployees(selectedEmployees, employees, nbEmployeesSelected)
     return The_Most(employees)
 
 def The_Most(employees):
     '''
 
     '''
-    print("employees")
-    print(employees)
     
-    # Get all combinations of 9 desired employees
-    combin_list = get_combin_list(employees,9)
+    # Get all combinations of X desired employees
+    combin_list = get_combin_list(employees,2)
     len_combin_list = len(combin_list)
+    
     print("combin_list")
     print(combin_list)
+
+    print("len_combin_list")
+    print(len_combin_list)
     
     # REPLACE BY list() IF IT IS MORE FAST OR TO HAVE SAME CODE EVERYWHERE
-    how_much_work_together = []
+    how_much_work_together_each_combin = []
+    resultVerif = list()
+
     for i in range (len_combin_list):
         # OLD
         #M += [Tabstats(moisEnCours, combin_list[i])]
         
         # NEW
-        how_much_work_together += [Tabstats(combin_list[i], fileXLSX)]
+        how_much_work_together_each_combin.append(Tabstats_F2(resultVerif, combin_list[i], fileXLSX))
 
-    
-   #Tabstats(selectedEmployees, fileXLSX)
-    print("how_much_work_together")
-    print(how_much_work_together)
-    maxi = maximum(how_much_work_together)
+    #Tabstats(selectedEmployees, fileXLSX)
+    index, maxi = maximum(how_much_work_together_each_combin)
+    best_group = combin_list[index]
+
     print("maxi")
     print(maxi)
-    return(combin_list[maxi])
+    return(best_group)
 
 
 def get_combin_list(seq, k):
     '''
-    Give all combinations of 9 desired employees  
+    THIS FUNCTION IS OK
+    Give all combinations of X desired employees
     '''
 
     # REPLACE BY list() IF IT IS MORE FAST OR TO HAVE SAME CODE EVERYWHERE
     p = []
     i, imax = 0, 2**len(seq)-1
     while i<=imax:
-        print(i)
+        #print(i)
         s = []
         j, jmax = 0, len(seq)-1
         while j<=jmax:
@@ -277,25 +283,57 @@ def get_combin_list(seq, k):
             j += 1
         if len(s)==k:
             p.append(s)
-            print(s)
         i += 1 
     return p
     
-    
-def maximum(selectedEmployees):
-    '''
-    
-    '''
-    maxi = selectedEmployees[0]
-    indice=0
-    nbEmployeesSelected = len(selectedEmployees)
 
-    for i in range(nbEmployeesSelected):
-        if selectedEmployees[i]>maxi:
-            maxi = selectedEmployees[i]
-            indice = i
-    return(indice)
- 																																												
+def Tabstats_F2(resultVerif, selectedEmployees, fileXLSX):
+    '''
+    First main functionnality : Checks input, do calcul, and return result
+    '''
+
+    fullTable, employees = excelFileSelection(fileXLSX)
+    nbEmployeesSelected = len(selectedEmployees)
+        
+    # Replaces names with numeric values
+    selectedFigures=replaceNamesByNumbers(selectedEmployees, employees)
+    
+    # Sorting in ascending order employees
+    selectedFiguresSorted=orderList(selectedFigures)
+
+    #Count how many time employees selected gave worked together
+    resultVerif = howManyTimesSelectedWorkedTogether(fullTable, nbEmployeesSelected, selectedFiguresSorted)
+    return(resultVerif)
+
+
+def maximum(how_much_work_together_each_combin):
+    '''
+    Return :
+        Index of the group of employees which worked the most together
+        Number of days
+    '''
+    how_much_work_together_each_combin_int = map(int, how_much_work_together_each_combin) 
+    how_much_work_together_each_combin_int = sorted(how_much_work_together_each_combin_int) 
+
+    print("how_much_work_together_each_combin_int")
+    print(how_much_work_together_each_combin_int)
+    maxi = max(how_much_work_together_each_combin_int)
+
+    index_group = how_much_work_together_each_combin.index(str(maxi))
+    '''
+    maxi = how_much_work_together_each_combin[0]
+    index_group = 0
+    nb_how_much_work_together_each_combin = len(how_much_work_together_each_combin)
+
+    for i in range(nb_how_much_work_together_each_combin):
+        print(how_much_work_together_each_combin[i])
+        if how_much_work_together_each_combin[i]>maxi:
+            maxi = how_much_work_together_each_combin[i]
+            index_group = i
+            break
+    '''
+    return(index_group, maxi)
+
 
 def error(resultVerif):
     '''
@@ -306,6 +344,6 @@ def error(resultVerif):
     resultFile.close()
 
 
-print("TIMING")
 
 print(timeit.timeit("__main__(selectedEmployees, fileXLSX)", "from __main__ import __main__, selectedEmployees, fileXLSX", number=1))
+print("TIMING")

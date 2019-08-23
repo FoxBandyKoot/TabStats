@@ -1,3 +1,5 @@
+Erreur obtenu avec XLSX original, donc beaucoup de résultats
+
 4037344
 4037345E04177.375: (while handling ('CMD_WRITE_TO_CONSOLE', 18128628))
             Error handling pydevd event: {'type': 'event', 'event': 'output', 'body': {'output': '4037280', 'category': 'stdout', 'source': {}}, 'seq': 18128628, 'pydevd_cmd_id': 116}
