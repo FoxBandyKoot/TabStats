@@ -18,8 +18,9 @@ FAIRE LA 2èME question
 
 Need refactor : verifNomsEmployes
 
-Faire des async tasks OU du multithread pour la q2 =< Pour augmenter les performances.
-Checkder les OS pour competences; car doit etre valide sur plusieurs OS.
+Faire des async tasks OU du multithread OU MULTICORE pour la q2 =< Pour augmenter les performances.
+Possibilité de parraléliser les 2 grandes étapes peut-être : get_combin list & count_how_much
+
 
 Developper des tests => Cours dans Programmation/Test
 Sessions de tests => Faire peter le logiciel

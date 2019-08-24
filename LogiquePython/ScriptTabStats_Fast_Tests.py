@@ -104,7 +104,7 @@ def excelFileSelection(fileXLSX):
 
     dir = fileXLSX
     
-    filename = os.path.join(dir, "TabStats_Short.xlsx") 
+    filename = os.path.join(dir, "TabStats_Short_20C.xlsx") 
     workbook = xlrd.open_workbook(filename)
     
     worksheet = workbook.sheet_by_name("Feuil1")
@@ -233,9 +233,9 @@ def The_Most(employees):
     '''
 
     '''
-    
+    object_per_group = 5
     # Get all combinations of X desired employees
-    combin_list = get_combin_list(employees,2)
+    combin_list = get_combin_list(employees, object_per_group)
     len_combin_list = len(combin_list)
     
     print("combin_list")
@@ -271,13 +271,13 @@ def get_combin_list(seq, k):
     '''
     THIS FUNCTION IS OK
     Give all combinations of X desired employees
+    >> : Binary operation : x * 2**y
     '''
 
     # REPLACE BY list() IF IT IS MORE FAST OR TO HAVE SAME CODE EVERYWHERE
     p = []
     i, imax = 0, 2**len(seq)-1
     while i<=imax:
-        #print(i)
         s = []
         j, jmax = 0, len(seq)-1
         while j<=jmax:
@@ -285,6 +285,7 @@ def get_combin_list(seq, k):
                 s.append(seq[j])
             j += 1
         if len(s)==k:
+            print(s)
             p.append(s)
         i += 1 
     return p
@@ -315,24 +316,14 @@ def maximum(how_much_work_together_each_combin):
         Index of the group of employees which worked the most together
         Number of days
     '''
+    # Convert to int sorted list and get max
     how_much_work_together_each_combin_int = map(int, how_much_work_together_each_combin) 
     how_much_work_together_each_combin_int = sorted(how_much_work_together_each_combin_int) 
-
     maxi = max(how_much_work_together_each_combin_int)
 
+    # Get index of best group
     index_group = how_much_work_together_each_combin.index(str(maxi))
-    '''
-    maxi = how_much_work_together_each_combin[0]
-    index_group = 0
-    nb_how_much_work_together_each_combin = len(how_much_work_together_each_combin)
 
-    for i in range(nb_how_much_work_together_each_combin):
-        print(how_much_work_together_each_combin[i])
-        if how_much_work_together_each_combin[i]>maxi:
-            maxi = how_much_work_together_each_combin[i]
-            index_group = i
-            break
-    '''
     return(index_group, maxi)
 
 
