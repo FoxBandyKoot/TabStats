@@ -12,15 +12,12 @@ Recuperer le chemin du fichier de donnees a traiter. FAIT
 
 Recuperer le nom du compte utilisateur de la session. FAIT 
 
-NE PAS AVOIR A RENOMMER LE FICHIER
+Ne pas avoir a renommer le fichier
 
-FAIRE LA 2èME question
 
 Need refactor : verifNomsEmployes
 
-Faire des async tasks OU du multithread OU MULTICORE pour la q2 =< Pour augmenter les performances.
-Possibilité de parraléliser les 2 grandes étapes peut-être : get_combin list & count_how_much
-
+Optimiser avec
 
 Developper des tests => Cours dans Programmation/Test
 Sessions de tests => Faire peter le logiciel
@@ -31,7 +28,7 @@ http://webcache.googleusercontent.com/search?q=cache:http://www.maths-algo.fr/al
 Ajouter une option pour calculer la question 1, sur 12 mois
 Ajouter une option pour calculer la question 2, sur 12 mois
 
-Remplacer la recherche des noms dans PYTHON par recursion
+
 
 - BUG : 
 
