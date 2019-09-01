@@ -2,45 +2,85 @@ from numpy import *
 import xlrd 
 import sys
 import os
+from  timeit import timeit
 import socket
-import timeit
 from threading import Thread
 
 ############################### DECLARATIONS ###############################
 
 script = ''
-fileXLSX = ''
-selectedEmployees = ''
+pathXLSX = ''
+array_part = 0
 full_table = list()
+combin_list = list()
+index_best_group = 0 # Position of group in list
+maxi = 0 # Value of count
 
-############################## DATA FOR TESTS ##############################
-
-# DECOMMENT ONE FOR TESTS
-#selectedEmployees = 'Fake1 Pierre Fake2 Lise Marie Fake3' #6'
-#selectedEmployees = 'Pierre Lise' # 10 times together
-#selectedEmployees = 'Lise Pierre' # 10 times together
-#selectedEmployees = 'Chloé Mike' 
-selectedEmployees = 'David Inès' # 15 times together
-
-# DECOMMENT THIS FOR TESTS
-selectedEmployees = selectedEmployees.split()
-
-# DECOMMENT NEXT LINE FOR TESTS WITHOUT QT
-fileXLSX = "C:/Users/Charly/CloudStation/Projets/Perso/TabStats/Data/"
-
-############################ END DATA FOR TESTS ############################
-
+#Decomment for tests
+pathXLSX = "C:/Users/Charly/CloudStation/Projets/Perso/TabStats/Data/"
 
 class TabStats(Thread):
+    def __init__(self, array_part_i):
+        '''
+        Constructor for threads
+        '''
 
-    def __main__(selectedEmployees, fileXLSX):
+        Thread.__init__(self)
+        ############################## DATA FOR TESTS ##############################
+
+        # DECOMMENT ONE FOR TESTS
+        #selectedEmployees = 'Fake1 Pierre Fake2 Lise Marie Fake3' #6'
+        #selectedEmployees = 'Pierre Lise' # 10 times together
+        #selectedEmployees = 'Lise Pierre' # 10 times together
+        #selectedEmployees = 'Chloé Mike' 
+        #selectedEmployees = 'David Inès' # 15 times together
+
+        # DECOMMENT NEXT LINE FOR TESTS WITHOUT QT
+
+        ############################ END DATA FOR TESTS ############################
+        self.array_part = array_part_i
+
+        selectedEmployees = ''
+
+
+    def The_Most(self, employees):
+        '''
+        Gives the most present group at the same time
+        '''
+        print("object_per_group")
+        print(object_per_group)
+        # Get all combinations of X desired employees
+        combin_list = get_combin_list(employees, object_per_group)
+        len_combin_list = len(combin_list)
+        
+        print("combin_list")
+        print(combin_list)
+
+        print("len_combin_list")
+        print(len_combin_list)
+        
+        # REPLACE BY list() IF IT IS MORE FAST OR TO HAVE SAME CODE EVERYWHERE
+        how_much_work_together_each_combin = []
+        resultVerif = list()
+
+        for i in range (len_combin_list):
+            # OLD
+            #M += [Tabstats(moisEnCours, combin_list[i])]
+            
+            # NEW
+            how_much_work_together_each_combin.append(Tabstats_F2(resultVerif, combin_list[i], pathXLSX))
+        
+        return maximum(how_much_work_together_each_combin)
+
+
+    def F1_OR_F2(self):
         
         # COMMENT THESE NEXTS 3 LINES FOR TESTS WITHOUT QT
         # GET ARGUMENTS
         '''
         selectedEmployees = sys.argv[1]
         selectedEmployees = selectedEmployees.split()
-        fileXLSX = sys.argv[2]
+        pathXLSX = sys.argv[2]
         '''
         # DECOMMENT THESE NEXT 3 LINES FOR TESTS WITH OR WITHOUT QT 
         '''
@@ -57,7 +97,7 @@ class TabStats(Thread):
 
         '''
         #First main functionnality : Checks input, do calcul, and return result
-        resultVerif = Tabstats(selectedEmployees, fileXLSX)
+        resultVerif = Tabstats_F1(selectedEmployees, pathXLSX)
         
         if (resultVerif != "error"): 
             resultFile = open("C:/Users/" + os.getlogin() + "/Documents/Resultats.txt","w")
@@ -65,28 +105,28 @@ class TabStats(Thread):
             resultFile.close()
         return
         '''
-        
-        #Secund functionnality : 
-        result = TS_9_employes_who_worked_the_most_together(selectedEmployees, employees)
-        return
+            
+        return self.The_Most(employees)
 
-
-
-    def __init__(self, array_part_i):
+    def run(self):
         '''
-        Constructor for threads
+        Run threads
         '''
+        timing = timeit("TabStats.F1_OR_F2(TabStats)", "from __main__ import TabStats", number=10)
+        #print(timeit.timeit("__main__(selectedEmployees, pathXLSX)", number=10))
+        print("END TIMING : " + timing)
 
-        Thread.__init__(self)
-        
-        self.array_part = array_part_i
-
-    def Tabstats(selectedEmployees, fileXLSX):
+    def Tabstats_F1(self, selectedEmployees, pathXLSX):
         '''
         First main functionnality : Checks input, do calcul, and return result
         '''
-        
-        self.full_table, employees = excelFileSelection(fileXLSX)
+        # DECOMMENT THIS FOR TESTS
+        selectedEmployees = selectedEmployees.split()
+
+        # NO MORE NEED TO CALL IT HERE
+        self.full_table, employees = excelFileSelection(pathXLSX) # NO MORE NEED TO CALL IT HERE
+        # NO MORE NEED TO CALL IT HERE
+
         nbEmployeesSelected = len(selectedEmployees)
         resultVerif = verifNameEmployees(selectedEmployees, employees, nbEmployeesSelected)
         
@@ -107,7 +147,7 @@ class TabStats(Thread):
         return(resultVerif)
 
 
-    def verifNameEmployees(selectedEmployees, employees, nbEmployeesSelected):
+    def verifNameEmployees(self, selectedEmployees, employees, nbEmployeesSelected):
         '''
         Check if selected employees exist
         ARG1: User input, ARG2: Table header, ARG3: number user input
@@ -143,7 +183,7 @@ class TabStats(Thread):
         return(result)
 
 
-    def replaceNamesByNumbers(selectedEmployees, employees):
+    def replaceNamesByNumbers(self, selectedEmployees, employees):
         '''
         Replaces names with their index
         ARG1: User input, ARG2: Table header
@@ -155,8 +195,8 @@ class TabStats(Thread):
                     L+=[j]
         return(L)
         
-    # Check for library
-    def orderList(selectedEmployees):
+
+    def orderList(self, selectedEmployees):
         '''
         Sorting employees in ascending order
         ARG1: User input
@@ -173,13 +213,13 @@ class TabStats(Thread):
             selectedEmployees = selectedEmployees[0:indice] + selectedEmployees[indice+1:len(selectedEmployees)]
         return(L)
     
-    def how_much_worked_together(full_table, nbEmployeesSelected, selectedFiguresSorted):
+
+    def how_much_worked_together(self, full_table, nbEmployeesSelected, selectedFiguresSorted):
         '''
         Count how many time employees selected gave worked together
         '''
-
         total = 0
-        for j in range (nb_lines):
+        for j in range (self.array_part):
             counter = 0
             for i in range (nbEmployeesSelected):
                 if self.full_table[j][selectedFiguresSorted[i]] != "":
@@ -194,53 +234,10 @@ class TabStats(Thread):
     #q2
 
 
-    def TS_9_employes_who_worked_the_most_together(selectedEmployees, employees):
-        '''
-        MAIN F2
-        '''
-        print("Test")
-        nbEmployeesSelected = len(selectedEmployees)
-        return The_Most(employees)
-
-    def The_Most(employees):
-        '''
-
-        '''
-        object_per_group = 5
-        # Get all combinations of X desired employees
-        combin_list = get_combin_list(employees, object_per_group)
-        len_combin_list = len(combin_list)
-        
-        print("combin_list")
-        print(combin_list)
-
-        print("len_combin_list")
-        print(len_combin_list)
-        
-        # REPLACE BY list() IF IT IS MORE FAST OR TO HAVE SAME CODE EVERYWHERE
-        how_much_work_together_each_combin = []
-        resultVerif = list()
-
-        for i in range (len_combin_list):
-            # OLD
-            #M += [Tabstats(moisEnCours, combin_list[i])]
-            
-            # NEW
-            how_much_work_together_each_combin.append(Tabstats_F2(resultVerif, combin_list[i], fileXLSX))
-
-        #Tabstats(selectedEmployees, fileXLSX)
-        index, maxi = maximum(how_much_work_together_each_combin)
-        best_group = combin_list[index]
-        
-        print("best_group")
-        print(best_group)
-
-        print("maxi")
-        print(maxi)
-        return(best_group)
+    
 
 
-    def get_combin_list(seq, k):
+    def get_combin_list(self, seq, k):
         '''
         THIS FUNCTION IS OK
         Give all combinations of X desired employees
@@ -264,7 +261,7 @@ class TabStats(Thread):
         return p
         
 
-    def Tabstats_F2(resultVerif, selectedEmployees, fileXLSX):
+    def Tabstats_F2(self, resultVerif, selectedEmployees, pathXLSX):
         '''
         Second functionnality : Checks input, do calcul, and return result
         '''
@@ -284,7 +281,7 @@ class TabStats(Thread):
         return(resultVerif)
 
 
-    def maximum(how_much_work_together_each_combin):
+    def maximum(self, how_much_work_together_each_combin):
         '''
         Return :
             Index of the group of employees which worked the most together
@@ -296,12 +293,12 @@ class TabStats(Thread):
         maxi = max(how_much_work_together_each_combin_int)
 
         # Get index of best group
-        index_group = how_much_work_together_each_combin.index(str(maxi))
+        index_best_group = how_much_work_together_each_combin.index(str(maxi))
 
-        return(index_group, maxi)
+        return(index_best_group, maxi)
 
 
-    def error(resultVerif):
+    def error(self, resultVerif):
         '''
         Create a txt file and write the errors in it
         '''
@@ -315,64 +312,78 @@ END CLASS
 
 '''
 
-def excelFileSelection(fileXLSX):
-        '''
-        Select the xlsx file then the sheet and open it. 
+def __main__():
+    
+    selectedEmployees = 'David Inès' # 15 times together
 
-        Return : main_list => Table fill with data from the xlsx fil
-                employees => Header xlsx file
-        '''
-
-        dir = fileXLSX
-        
-        filename = os.path.join(dir, "TabStats_Short_20C.xlsx") 
-        workbook = xlrd.open_workbook(filename)
-        
-        worksheet = workbook.sheet_by_name("Feuil1")
-
-        lines = worksheet.nrows
-        columns = worksheet.ncols
-        
-        # Populate the list with all the employee names in the xlsx file header
-        employees = list()
-        indexHeaderTab = 0
-        for y in range(columns)[1:]:            
-            employees.append(worksheet.cell(indexHeaderTab,y).value) 
-        
-        main_list = list() # main list
-        temp_list = list() # temporary list
-        
-        # Get the xlsx array (everything except the header)
-        for x in range(lines)[1:]:
-            for y in range(columns)[1:]:  # We first add the first line in a temporary array, then
-                temp_list.append(worksheet.cell(x,y).value)
-            main_list.append(temp_list)  # This line is added to the main table, then
-            temp_list = [] # We clear the temporary array to get the next line
-        return(main_list, employees)    
+    full_table, employees = excelFileSelection(pathXLSX)
+    [nb_lines, nb_columns]=shape(full_table)
+    first_half_tab = ceil(nb_lines / 2)
+    second_half_tab = floor(nb_lines / 2) 
+    object_per_group = 5
 
 
-
-full_table, employees = excelFileSelection(fileXLSX)
-[nb_lines, nb_columns]=shape(full_table)
-first_half = ceil(nb_lines / 2)
-second_half = floor(nb_lines / 2) 
-print(first_half)
-print(second_half)
+    print(first_half_tab)
+    print(second_half_tab)
 
 
-# Create threads
-t_first_half_tab = TabStats(first_half)
-t_second_half_tab = TabStats(second_half)
+    # Create threads
+    t_first_half_tab = TabStats(first_half_tab)
+    t_second_half_tab = TabStats(second_half_tab)
 
-# Run threads
-t_first_half_tab.start()
-t_second_half_tab.start()
+    # Run threads
+    t_first_half_tab.start()
+    t_second_half_tab.start()
 
-# Wait threads to finish
-t_first_half_tab.join()
-t_second_half_tab.join()
-'''
-print(timeit.timeit("__main__(selectedEmployees, fileXLSX)", "from __main__ import __main__, selectedEmployees, fileXLSX", number=10))
-print("TIMING")
-'''
+    # Wait threads to finish
+    t_first_half_tab.join()
+    t_second_half_tab.join()
+
+    print ("index, maxi")
+    print (index_best_group, maxi)
+
+    if combin_list:
+        best_group = combin_list[index_best_group]
+        print("best_group")
+        print(best_group)
+
+
+def excelFileSelection(pathXLSX):
+    '''
+    Select the xlsx file then the sheet and open it. 
+
+    Return : main_list => Table fill with data from the xlsx fil
+            employees => Header xlsx file
+    '''
+
+    # Get the worksheet
+    dir = pathXLSX
+    fileXLSX = "TabStats_Short_10C.xlsx"
+    filename = os.path.join(dir, fileXLSX) 
+    workbook = xlrd.open_workbook(filename)
+    worksheet = workbook.sheet_by_name("Feuil1")
+
+    lines = worksheet.nrows
+    columns = worksheet.ncols
+    
+    # Populate the list with all the employee names in the xlsx file header
+    employees = list()
+    indexHeaderTab = 0
+    for y in range(columns)[1:]:            
+        employees.append(worksheet.cell(indexHeaderTab,y).value) 
+    
+    main_list = list() # main list
+    temp_list = list() # temporary list
+    
+    # Get the xlsx array (everything except the header)
+    for x in range(lines)[1:]:
+        for y in range(columns)[1:]:  # We first add the first line in a temporary array, then
+            temp_list.append(worksheet.cell(x,y).value)
+        main_list.append(temp_list)  # This line is added to the main table, then
+        temp_list = [] # We clear the temporary array to get the next line
+    return(main_list, employees)    
+
+
+if __name__ == '__main__':
+    __main__()
 

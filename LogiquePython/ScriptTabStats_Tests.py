@@ -345,6 +345,5 @@ def error(resultVerif):
     resultFile.close()
 
 
-
 print(timeit.timeit("__main__(selectedEmployees, fileXLSX)", "from __main__ import __main__, selectedEmployees, fileXLSX", number=10))
 print("TIMING")

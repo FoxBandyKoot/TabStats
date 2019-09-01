@@ -29,6 +29,8 @@ Ajouter une option pour calculer la question 1, sur 12 mois
 Ajouter une option pour calculer la question 2, sur 12 mois
 
 
+Chercher une librairie/algorithme pour obtimiser la fonction orderList()
+
 
 - BUG : 
 
