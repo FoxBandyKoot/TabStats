@@ -28,8 +28,8 @@ class TabStats():
     ############################## DATA FOR TESTS ##############################
 
     # DECOMMENT ONE FOR TESTS
-    selectedEmployees = 'Fake1 Pierre Fake2 Lise Marie Fake3' #6'
-    #selectedEmployees = 'Pierre Lise' # 10 times together
+    #selectedEmployees = 'Fake1 Pierre Fake2 Lise Marie Fake3'
+    selectedEmployees = 'Pierre Lise' # 10 times together
     #selectedEmployees = 'Lise Pierre' # 10 times together
     #selectedEmployees = 'Chloé Mike' 
     #selectedEmployees = 'David Inès' # 15 times together
@@ -37,6 +37,10 @@ class TabStats():
 
 
     def start_program(self):
+        '''
+        Run the button that user clickeds
+        '''
+        # Get the worksheet
         worksheet = self.excelFileSelection(self)
 
         self.full_table, self.employees = self.get_header_employees(self, worksheet)
@@ -44,6 +48,7 @@ class TabStats():
 
         if self.F1_run:
             self.F1_go(self)
+
         elif self.F2_run:
             self.F2_go(self)
 
@@ -86,8 +91,8 @@ class TabStats():
         return(main_list, self.employees)    
 
     def F1_go(self):
-        #F1.Tabstats_F1(self, self.selectedEmployees)
-        F1.init(self, self.selectedEmployees)
+        f1 = F1()
+        f1.init(self.selectedEmployees, self.employees, self.nb_lines, self.full_table)
 
     def F2_go(self):
         # Boundaries for each threads
@@ -96,7 +101,7 @@ class TabStats():
 
         # Create threads
         t_first_half_tab = F2(first_half_tab, self.employees, self.full_table)
-        t_second_half_tab = F2(second_half_tab, eself.mployees, self.full_table)
+        t_second_half_tab = F2(second_half_tab, self.employees, self.full_table)
 
         # Run threads
         t_first_half_tab.start()
