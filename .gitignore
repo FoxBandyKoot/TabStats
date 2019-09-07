@@ -1,3 +1,7 @@
 InterfaceQt/Build
 Executable
 .vscode
+Capture
+
+**/~*
+**/*.*.pyc
