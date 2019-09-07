@@ -104,7 +104,7 @@ def excelFileSelection(fileXLSX):
 
     dir = fileXLSX
     
-    filename = os.path.join(dir, "TabStats_Short.xlsx") 
+    filename = os.path.join(dir, "TabStats_Short_10C.xlsx") 
     workbook = xlrd.open_workbook(filename)
     
     worksheet = workbook.sheet_by_name("Feuil1")
@@ -237,9 +237,6 @@ def The_Most(employees):
     # Get all combinations of X desired employees
     combin_list = get_combin_list(employees,2)
     len_combin_list = len(combin_list)
-    
-    print("combin_list")
-    print(combin_list)
 
     print("len_combin_list")
     print(len_combin_list)

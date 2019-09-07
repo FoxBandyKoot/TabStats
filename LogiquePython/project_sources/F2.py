@@ -4,12 +4,11 @@ class F2(Thread):
 
     #dt_name for Dictionnary
 
-    def __init__(self, half_tab_i, lines_to_read_i, employees_i, full_table_i):
+    def __init__(self, half_tab_i, lines_to_read_i, employees_i, full_table_i, object_per_group_i):
         '''
         Constructor for threads
         '''
         Thread.__init__(self)
-        print(half_tab_i)
         # Boundaries for threads
         if half_tab_i == "first_half_tab":
             self.iterator_line = 0
@@ -20,21 +19,7 @@ class F2(Thread):
 
         self.employees = employees_i        # Header employees
         self.full_table = full_table_i      # All data
-
-        '''
-
-        TO CHANGE
-
-
-        '''
-        self.object_per_group = 2           # Object per combin
-        
-        '''
-
-        TO CHANGE
-
-
-        '''
+        self.object_per_group = object_per_group_i
 
         # All groups
         self.combin_list = list()
@@ -51,8 +36,9 @@ class F2(Thread):
         # Get all combinations of all groups
         self.combin_list = self.get_combin_list(self.employees, self.object_per_group)
         len_combin_list = len(self.combin_list)
-        
-        self.dt_id_group = self.get_dt_id_group(self.combin_list, len_combin_list)        
+        #print("len_combin_list")
+        #print(len_combin_list)
+        #self.dt_id_group = self.get_dt_id_group(self.combin_list, len_combin_list)         USELESS FOR NOW
         
         # REPLACE BY list() IF IT IS MORE FAST OR TO HAVE SAME CODE EVERYWHERE
         result = list()
@@ -63,7 +49,7 @@ class F2(Thread):
 
     def get_combin_list(self, seq, k):
         '''
-        Give all combinations of X desired employees
+        Give all combinations of X desired employees.
         ">>" is a binary operation : x * 2**y
         '''
         # REPLACE BY list() IF IT IS MORE FAST OR TO HAVE SAME CODE EVERYWHERE

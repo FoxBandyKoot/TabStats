@@ -18,9 +18,14 @@ class TabStats():
     nb_columns = 0
     nb_lines = 0
     index_best_group = 0
+    
+    '''
+    TO CHANGE
+    ''' 
+    object_per_group = 5           # Object per combin
 
-    F1_run = True
-    F2_run = False
+    F1_run = False
+    F2_run = True
     #Decomment for tests without GUI
     pathXLSX = "C:/Users/Charly/CloudStation/Projets/Perso/TabStats/Data/"
     ############################## END DECLARATIONS #############################
@@ -44,14 +49,14 @@ class TabStats():
         # Get the worksheet
         worksheet = self.excelFileSelection(self)
 
-        self.full_table, self.employees = self.get_header_employees(self, worksheet)
+        self.full_table, employees = self.get_header_employees(self, worksheet)
         [self.nb_lines, self.nb_columns] = shape(self.full_table)
 
         if self.F1_run:
-            self.F1_go(self)
+            self.F1_go(self, employees)
 
         elif self.F2_run:
-            self.F2_go(self)
+            self.F2_go(self, employees)
 
 
     def excelFileSelection(self):
@@ -59,7 +64,7 @@ class TabStats():
         Select the xlsx file then the sheet and return it. 
         '''
         dir = self.pathXLSX
-        fileXLSX = "TabStats_Short_10C.xlsx"
+        fileXLSX = "TabStats_Short_15C.xlsx"
         filename = os.path.join(dir, fileXLSX) 
         workbook = xlrd.open_workbook(filename)
         worksheet = workbook.sheet_by_name("Feuil1")
@@ -75,10 +80,10 @@ class TabStats():
         '''
         lines = worksheet.nrows
         columns = worksheet.ncols
-        
+        employees = list()
         indexHeaderTab = 0
         for y in range(columns)[1:]:            
-            self.employees.append(worksheet.cell(indexHeaderTab,y).value) 
+            employees.append(worksheet.cell(indexHeaderTab,y).value) 
         
         main_list = list() # main list
         temp_list = list() # temporary list
@@ -89,22 +94,16 @@ class TabStats():
                 temp_list.append(worksheet.cell(x,y).value)
             main_list.append(temp_list)  # This line is added to the main table, then
             temp_list = [] # We clear the temporary array to get the next line
-        return(main_list, self.employees)    
+        return(main_list, employees)    
 
 
-    def F1_go(self):
+    def F1_go(self, employees):
         f1 = F1()
-        f1.init(self.selectedEmployees, self.employees, self.nb_lines, self.full_table)
+        f1.init(self.selectedEmployees, employees, self.nb_lines, self.full_table)
 
 
-    def F2_go(self):
+    def F2_go(self, employees):
         # Boundaries for each threads
-        '''
-        print("nb_lines")
-        print(self.nb_lines)
-        print("nb_lines rest")
-        print(self.nb_lines % 2)
-        '''
         if self.nb_lines % 2 == 0:
             first_half_lines = self.nb_lines / 2
             second_half_lines = self.nb_lines
@@ -112,8 +111,8 @@ class TabStats():
             print("FUCK IT")
             
         # Create threads
-        th_first_half_tab = F2("first_half_tab", first_half_lines, self.employees, self.full_table)
-        th_second_half_tab = F2("second_half_tab", second_half_lines, self.employees, self.full_table)
+        th_first_half_tab = F2("first_half_tab", first_half_lines, employees, self.full_table, self.object_per_group)
+        th_second_half_tab = F2("second_half_tab", second_half_lines, employees, self.full_table, self.object_per_group)
 
         # Run threads
         th_first_half_tab.start()
@@ -127,13 +126,9 @@ class TabStats():
         th_first_half_tab.value_each_group = list(map(int, th_first_half_tab.value_each_group))
         th_second_half_tab.value_each_group = list(map(int, th_second_half_tab.value_each_group))
         
-        print(th_first_half_tab.value_each_group)
-        print(th_second_half_tab.value_each_group)
         
         # Merge the 2 threads
         value_each_group = [x + y for x, y in zip(th_first_half_tab.value_each_group, th_second_half_tab.value_each_group)]
-        
-        print(value_each_group)
         
         # Get index of the best group
         self.index_best_group, maxi = self.maximum(self, value_each_group)
@@ -155,8 +150,6 @@ class TabStats():
         print(maxi)
         # Get index of best group
         index_best_group = value_each_group.index(maxi)
-        print("index_best_group")
-        print(index_best_group)
 
         return(index_best_group, maxi)
 
@@ -169,10 +162,15 @@ def __main__():
     tabStats.start_program(tabStats)
 
 if __name__ == '__main__':
+
     # DECOMMENT THESE NEXT 3 LINES FOR TESTS WITH OR WITHOUT QT 
     '''
     TestFile = open("C:/Users/" + os.getlogin() + "/Documents/TESTS.txt", "w")
     TestFile.write(str(selectedEmployees))
     TestFile.close()
     '''
-    __main__()
+
+    print(timeit("__main__()", "from __main__ import __main__", number = 10))
+    print("TIMING")
+
+    #__main__()
