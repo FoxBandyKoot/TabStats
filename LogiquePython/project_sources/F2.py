@@ -1,66 +1,65 @@
 from threading import Thread
 
-
-
 class F2(Thread):
 
-    def __init__(self, array_part_i, employees_i, full_table_i):
+    #dt_name for Dictionnary
+
+    def __init__(self, half_tab_i, lines_to_read_i, employees_i, full_table_i):
         '''
         Constructor for threads
         '''
         Thread.__init__(self)
-        
+        print(half_tab_i)
         # Boundaries for threads
-        self.array_part = int(array_part_i)
-        
-        # Header employees
-        self.employees = employees_i
-        
-        # All data
-        self.full_table = full_table_i
-        
-        # Object per combin
-        self.object_per_group = 2
+        if half_tab_i == "first_half_tab":
+            self.iterator_line = 0
+        elif half_tab_i == "second_half_tab":
+            self.iterator_line = int(lines_to_read_i / 2)
 
-        # To analyse each group
-        self.selectedEmployees = ''
-        self.nbEmployeesSelected = 0
+        self.lines_to_read = int(lines_to_read_i)
+
+        self.employees = employees_i        # Header employees
+        self.full_table = full_table_i      # All data
+
+        '''
+
+        TO CHANGE
+
+
+        '''
+        self.object_per_group = 2           # Object per combin
+        
+        '''
+
+        TO CHANGE
+
+
+        '''
 
         # All groups
         self.combin_list = list()
+        self.value_each_group = list()
 
-        # Position of group in list
-        self.index_best_group, self.maxi = self.The_Most(self.employees)
+        self.main()         # get max for each group for one half of the tab per thread
 
-    def The_Most(self, employees):
+    def main(self):
         '''
         Gives the most present group at the same time
-        Arg 1 
+        Arg 1 : Header tab
         '''
 
-        # Get all combinations of X desired employees
-        self.combin_list = self.get_combin_list(employees, self.object_per_group)
+        # Get all combinations of all groups
+        self.combin_list = self.get_combin_list(self.employees, self.object_per_group)
         len_combin_list = len(self.combin_list)
         
-        print("combin_list")
-        print(self.combin_list)
-
-        print("len_combin_list")
-        print(len_combin_list)
+        self.dt_id_group = self.get_dt_id_group(self.combin_list, len_combin_list)        
         
         # REPLACE BY list() IF IT IS MORE FAST OR TO HAVE SAME CODE EVERYWHERE
-        value_each_group = list()
-        resultVerif = list()
+        result = list()
 
         for i in range (len_combin_list):
-            # OLD
-            #M += [Tabstats(moisEnCours, combin_list[i])]
+            self.value_each_group.append(self.Tabstats_F2(result, self.combin_list[i]))
             
-            # NEW
-            value_each_group.append(self.Tabstats_F2(resultVerif, self.combin_list[i]))
-        
-        return self.maximum(value_each_group)
-
 
     def get_combin_list(self, seq, k):
         '''
@@ -78,90 +77,92 @@ class F2(Thread):
                     s.append(seq[j])
                 j += 1
             if len(s)==k:
-                print(s)
                 p.append(s)
             i += 1 
         return p
         
 
-    def Tabstats_F2(self, resultVerif, selectedEmployees):
+    def get_dt_id_group(self, combin_list, len_combin_list):
         '''
+        arg1: combin of all groups, arg2: number of group for the dictionnary
+        return a dictionnary which mut a key for each group, to find the group at the end of the F2, with the index
+        '''
+        dt_id_group = {}
+        for i in range(len_combin_list):
+            dt_id_group[i] = combin_list[i]
+        return dt_id_group
+
+
+    def Tabstats_F2(self, result, selectedGroup):
+        '''
+        arg2 : group of the combin list
         Second functionnality : Checks input, do calcul, and return result
-        '''
-        self.nbEmployeesSelected = len(selectedEmployees)
-            
+        '''            
         # Replaces names with numeric values
-        selectedFigures = self.replaceNamesByNumbers(selectedEmployees, self.employees)
-        
-        # Sorting in ascending order employees
+        #print(selectedGroup)
+        selectedFigures = self.replaceNamesByNumbers(selectedGroup)
+        # Sorting in ascending order employees, USELESS HERE IN THINK
         selectedFiguresSorted = self.orderList(selectedFigures)
-
+        
         #Count how many time employees selected gave worked together
-        resultVerif = self.how_much_worked_together(self.full_table, self.nbEmployeesSelected, selectedFiguresSorted)
-        return(resultVerif)
+        result = self.how_much_worked_together(selectedFiguresSorted)
+        #result = self.how_much_worked_together(selectedFigures)
+        return(result)
 
 
-    def replaceNamesByNumbers(self, selectedEmployees, employees):
+    def replaceNamesByNumbers(self, selectedGroup):
         '''
         Replaces names with their index
         ARG1: User input, ARG2: Table header
         '''
-        L=[]                
-        for i in range (len(selectedEmployees)):
-            for j in range (len(employees)):
-                if selectedEmployees[i]==employees[j]:
-                    L+=[j]
+        L = []                
+        for i in range (len(selectedGroup)):
+            for j in range (len(self.employees)):
+                if selectedGroup[i] == self.employees[j]:
+                    L += [j]
         return(L)
-        
 
-    def orderList(self, selectedEmployees):
+
+    def orderList(self, selectedGroup):
+        # USELESS FUNCTION I THINK 
+        #       print("orderList")
+        #       print(selectedGroup)
+        # AND PRINT JUST AFTER LINE "selectedFigures = self.replaceNamesByNumbers(selectedGroup, self.employees)"
+        #       print("selectedFigures")
+        #       print(selectedFigures)
+
         '''
         Sorting employees in ascending order
         ARG1: User input
         '''
         L=[]
-        while selectedEmployees!=[]:
-            minim=selectedEmployees[0]
+        while selectedGroup!=[]:
+            minim=selectedGroup[0]
             indice=0
-            for i in range(len(selectedEmployees)):
-                if selectedEmployees[i] < minim:
-                    minim = selectedEmployees[i]
+            for i in range(len(selectedGroup)):
+                if selectedGroup[i] < minim:
+                    minim = selectedGroup[i]
                     indice = i
-            L+=[selectedEmployees[indice]]
-            selectedEmployees = selectedEmployees[0:indice] + selectedEmployees[indice+1:len(selectedEmployees)]
+            L+=[selectedGroup[indice]]
+            selectedGroup = selectedGroup[0:indice] + selectedGroup[indice + 1:len(selectedGroup)]
         return(L)
 
 
-    
-    def how_much_worked_together(self, full_table, nbEmployeesSelected, selectedFiguresSorted):
+    def how_much_worked_together(self, selectedFiguresSorted):
         '''
-        Count how many time employees selected gave worked together
+        Count how many time employees selected gave worked together. Depends on threads 
+        '''
+        '''
+        print(selectedFiguresSorted)
         '''
         total = 0
-        for j in range (self.array_part):
+        for i in range (self.lines_to_read)[self.iterator_line:]:
             counter = 0
-            for i in range (self.nbEmployeesSelected):
-                if self.full_table[j][selectedFiguresSorted[i]] != "":
+            for j in range (self.object_per_group):
+                if self.full_table[i] [selectedFiguresSorted[j]] != "":
                     counter += 1
-            if counter == self.nbEmployeesSelected:
+            if counter == self.object_per_group:
                 total += 1
 
         total = str(total)
         return(total)
-
-
-    def maximum(self, value_each_group):
-        '''
-        Return :
-            Index of the group of employees which worked the most together
-            Number of days
-        '''
-        # Convert to int sorted list and get max
-        value_each_group_int = map(int, value_each_group) 
-        value_each_group_int = sorted(value_each_group_int) 
-        maxi = max(value_each_group_int)
-
-        # Get index of best group
-        index_best_group = value_each_group.index(str(maxi))
-
-        return(index_best_group, maxi)

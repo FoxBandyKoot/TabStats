@@ -15,9 +15,9 @@ class TabStats():
     pathXLSX = ''
     full_table = list()
     employees = list()
-    maxi = 0
     nb_columns = 0
     nb_lines = 0
+    index_best_group = 0
 
     F1_run = True
     F2_run = False
@@ -28,10 +28,11 @@ class TabStats():
     ############################## DATA FOR TESTS ##############################
 
     # DECOMMENT ONE FOR TESTS
-    #selectedEmployees = 'Fake1 Pierre Fake2 Lise Marie Fake3'
-    selectedEmployees = 'Pierre Lise' # 10 times together
+    selectedEmployees = 'Fake1 Pierre Fake2 Lise Marie Fake3'
+    #selectedEmployees = 'Pierre Lise' # 10 times together
     #selectedEmployees = 'Lise Pierre' # 10 times together
     #selectedEmployees = 'Chloé Mike' 
+    #selectedEmployees = 'Paul Sarah' # 30 times together
     #selectedEmployees = 'David Inès' # 15 times together
     ############################ END DATA FOR TESTS ############################
 
@@ -90,40 +91,74 @@ class TabStats():
             temp_list = [] # We clear the temporary array to get the next line
         return(main_list, self.employees)    
 
+
     def F1_go(self):
         f1 = F1()
         f1.init(self.selectedEmployees, self.employees, self.nb_lines, self.full_table)
 
+
     def F2_go(self):
         # Boundaries for each threads
-        first_half_tab = ceil(self.nb_lines / 2)
-        second_half_tab = floor(self.nb_lines / 2) 
-
+        '''
+        print("nb_lines")
+        print(self.nb_lines)
+        print("nb_lines rest")
+        print(self.nb_lines % 2)
+        '''
+        if self.nb_lines % 2 == 0:
+            first_half_lines = self.nb_lines / 2
+            second_half_lines = self.nb_lines
+        else:
+            print("FUCK IT")
+            
         # Create threads
-        t_first_half_tab = F2(first_half_tab, self.employees, self.full_table)
-        t_second_half_tab = F2(second_half_tab, self.employees, self.full_table)
+        th_first_half_tab = F2("first_half_tab", first_half_lines, self.employees, self.full_table)
+        th_second_half_tab = F2("second_half_tab", second_half_lines, self.employees, self.full_table)
 
         # Run threads
-        t_first_half_tab.start()
-        t_second_half_tab.start()
+        th_first_half_tab.start()
+        th_second_half_tab.start()
 
         # Wait threads to finish
-        t_first_half_tab.join()
-        t_second_half_tab.join()
+        th_first_half_tab.join()
+        th_second_half_tab.join()
 
-        print("index T1")
-        print(t_first_half_tab.index_best_group)
-        print("index T2")
-        print(t_second_half_tab.index_best_group)
-
-        self.maxi = t_first_half_tab.maxi + t_second_half_tab.maxi
-        print("maxi")
-        print(self.maxi)
-
-        if t_first_half_tab.combin_list:
-            self.best_group = t_first_half_tab.combin_list[t_first_half_tab.index_best_group]
+        # Convert list to int
+        th_first_half_tab.value_each_group = list(map(int, th_first_half_tab.value_each_group))
+        th_second_half_tab.value_each_group = list(map(int, th_second_half_tab.value_each_group))
+        
+        print(th_first_half_tab.value_each_group)
+        print(th_second_half_tab.value_each_group)
+        
+        # Merge the 2 threads
+        value_each_group = [x + y for x, y in zip(th_first_half_tab.value_each_group, th_second_half_tab.value_each_group)]
+        
+        print(value_each_group)
+        
+        # Get index of the best group
+        self.index_best_group, maxi = self.maximum(self, value_each_group)
+        '''
+        print(th_first_half_tab.combin_list)
+        '''
+        if th_first_half_tab.combin_list:
+            self.best_group = th_first_half_tab.combin_list[self.index_best_group]
             print("best_group")
             print(self.best_group)
+
+    
+    def maximum(self, value_each_group):
+        '''
+        Return the index of the group of employees which worked the most together
+        '''
+        maxi = max(value_each_group)
+        print("maxi")
+        print(maxi)
+        # Get index of best group
+        index_best_group = value_each_group.index(maxi)
+        print("index_best_group")
+        print(index_best_group)
+
+        return(index_best_group, maxi)
 
 '''
 END CLASS

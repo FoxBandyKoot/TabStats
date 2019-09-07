@@ -8,9 +8,7 @@ class F1():
     def init(self, selectedEmployees_i, employees_i, nb_lines_i, full_table_i):
         '''
         Constructor for threads
-        '''
-        self.resultVerif = ""
-        
+        '''        
         # To analyse each group
         self.selectedEmployees = selectedEmployees_i.split()
         self.nbEmployeesSelected = len(self.selectedEmployees)
@@ -39,11 +37,11 @@ class F1():
         '''
         # DECOMMENT THIS FOR TESTS
 
-        self.resultVerif = self.verifNameEmployees()
+        result_verif = self.verifNameEmployees()
         
         # If there is an error in a name, stop the program and indicate which name is wrong
-        if (self.resultVerif != "Tous les noms sont présents. Nombre de fois où ils ont travaillé ensemble : "):
-            self.error_input(self.resultVerif)
+        if (result_verif != "Tous les noms sont présents. Nombre de fois où ils ont travaillé ensemble : "):
+            self.error_input(result_verif)
             return ("error")
             
         # Replaces names with numeric values
@@ -53,10 +51,10 @@ class F1():
         selectedFiguresSorted = self.orderList(selectedFigures)
 
         #Count how many time employees selected gave worked together
-        self.resultVerif += self.how_much_worked_together(selectedFiguresSorted) 
+        result_verif += self.how_much_worked_together(selectedFiguresSorted) 
 
-        if (self.resultVerif != "error"): 
-            self.write_result()
+        if (result_verif != "error"): 
+            self.write_result(result_verif)
 
     
     def verifNameEmployees(self):
@@ -143,16 +141,20 @@ class F1():
         return(total)
 
     
-    def write_result(self):
+    def write_result(self, result_verif):
+        '''
+        Create a txt file and write the results in it
+        '''
+        print(result_verif)
         resultFile = open("C:/Users/" + os.getlogin() + "/Documents/Resultats.txt","w")
-        resultFile.write(str(self.resultVerif)) # Need a string  
+        resultFile.write(result_verif) # Need a string  
         resultFile.close()
     
     
-    def error_input(self):
+    def error_input(self, result_verif):
         '''
         Create a txt file and write the errors in it
         '''
         resultFile = open("C:/Users/" + os.getlogin() + "/Documents/Resultats.txt", "w")
-        resultFile.write(self.resultVerif)
+        resultFile.write(result_verif)
         resultFile.close()

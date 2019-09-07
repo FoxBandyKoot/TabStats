@@ -14,12 +14,20 @@ Recuperer le nom du compte utilisateur de la session. FAIT
 
 Ne pas avoir a renommer le fichier
 
-
 Need refactor : verifNomsEmployes
 
-Optimiser avec
+Optimiser
+
+F2 sur mois pair
+
+ORDER LIST() IS MAYBE USELESS => LOOK COMMENTS
+
+Remplacer la des combin par une liste de tupple (id, group) = count
+
+Ajouter a l'interface le message "Attention le programme ne vérifie pas qu'il n'y a pas d'erreur dans les cases du tableau lui-même
 
 Developper des tests => Cours dans Programmation/Test
+
 Sessions de tests => Faire peter le logiciel
 
 Determiner la complexite algorithmique des 2 jets de la q2 !!! (memoire et temps)
