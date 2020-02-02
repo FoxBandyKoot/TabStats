@@ -36,6 +36,7 @@ class F2():
         self. nb_lines = nb_lines_i
         self.object_per_group = object_per_group_i
         self.full_table = full_table_i
+        self.main()
 
     def main(self):
         '''
@@ -81,7 +82,6 @@ class F2():
         th_first_half_tab.value_each_group = list(map(int, th_first_half_tab.value_each_group))
         th_second_half_tab.value_each_group = list(map(int, th_second_half_tab.value_each_group))
         
-        
         # Merge the 2 threads
         value_each_group = [x + y for x, y in zip(th_first_half_tab.value_each_group, th_second_half_tab.value_each_group)]
         
@@ -92,8 +92,8 @@ class F2():
         '''
         if th_first_half_tab.combin_list:
             self.best_group = th_first_half_tab.combin_list[self.index_best_group]
-            print("best_group")
-            print(self.best_group)
+            #print("best_group")
+            #print(self.best_group)
 
     
     def maximum(self, value_each_group):

@@ -1,0 +1,50 @@
+﻿A FAIRE
+
+https://python-guide-pt-br.readthedocs.io/fr/latest/writing/structure.html
+
+Envoyer les donnees choisies : 
+	D'abord tester avec 0 parametres, puis 1 (fichier excel), puis 2 parametres (les noms) FAIT
+
+Analyser les donnees envoyees, si elles sont transmises sous format chaine, decoupees, en list ?
+	J'ai ecris les valeurs direct dans un fichier txt. FAIT
+	
+Recuperer le chemin du fichier de donnees a traiter. FAIT
+
+Recuperer le nom du compte utilisateur de la session. FAIT 
+
+Ne pas avoir a renommer le fichier
+
+Need refactor : verifNomsEmployes
+
+LIRE https://timber.io/blog/multiprocessing-vs-multithreading-in-python-what-you-need-to-know/ => OPTIMISER PAR MULTIPROCESSING
+Optimiser avec bitwise ? https://skyduino.wordpress.com/2013/04/05/tuto-le-bitwise-pour-les-nuls/, https://www.blogduwebdesign.com/les-operateurs-bit-a-bit-en-javascript/
+Optimiser en cheangant la façon de compter, par exemple, en consruisant le groupe qui sera le plus présent. 
+	Un exemple est de compter combien de fois chaque personne est présente, et de d'assembler le groupe le plus présent en y mettant les personnes plus présentes.
+	Ensuite, je vérifie que ce groupe est le plus présent, si ce n'est pas le cas, je passe au second qui a l'air le plus présent
+	Je compare les résultats à mon algo actuel qui est sûr, mais plus long.
+
+F2 sur mois pair
+
+ORDER LIST() IS MAYBE USELESS => LOOK COMMENTS 
+
+Remplacer la des combin par une liste de tupple (id, group) = count
+
+Ajouter a l'interface le message "Attention le programme ne vérifie pas qu'il n'y a pas d'erreur dans les cases du tableau lui-même
+
+Developper des tests => Cours dans Programmation/Test
+
+Sessions de tests => Faire peter le logiciel
+
+Determiner la complexite algorithmique des 2 jets de la q2 !!! (memoire et temps)
+http://webcache.googleusercontent.com/search?q=cache:http://www.maths-algo.fr/algo/cours/cours_algo_cout_complexite.htm
+
+Ajouter une option pour calculer la question 1, sur 12 mois
+Ajouter une option pour calculer la question 2, sur 12 mois
+
+
+Chercher une librairie/algorithme pour obtimiser la fonction orderList()
+
+
+- BUG : 
+
+Les noms d'une lettre font buguer l'application

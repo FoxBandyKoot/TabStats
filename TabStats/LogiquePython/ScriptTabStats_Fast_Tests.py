@@ -13,9 +13,7 @@ class TabStats():
     ################################ DECLARATIONS ###############################
     script = ''
     pathXLSX = ''
-    full_table = list()
-    index_best_group = 0
-    
+    full_table = list()    
     '''
     TO CHANGE
     ''' 
@@ -61,7 +59,7 @@ class TabStats():
         Select the xlsx file then the sheet and return it. 
         '''
         dir = self.pathXLSX
-        fileXLSX = "TabStats_Short_15C.xlsx"
+        fileXLSX = "TabStats_Short_10C.xlsx"
         filename = os.path.join(dir, fileXLSX) 
         workbook = xlrd.open_workbook(filename)
         worksheet = workbook.sheet_by_name("Feuil1")

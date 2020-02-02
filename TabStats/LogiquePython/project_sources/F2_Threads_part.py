@@ -6,13 +6,19 @@ class F2_Threads_part(Thread):
         '''
         Constructor for threads
         '''
+    
         Thread.__init__(self)
         # Boundaries for threads
         if half_tab_i == "first_half_tab":
             self.iterator_line = 0
         elif half_tab_i == "second_half_tab":
             self.iterator_line = int(lines_to_read_i / 2)
-
+        
+        print("lines_to_read_i")
+        print(lines_to_read_i)
+        
+        print("self.iterator_line")
+        print(self.iterator_line)
         self.lines_to_read = int(lines_to_read_i)
 
         self.employees = employees_i        # Header employees
@@ -97,6 +103,7 @@ class F2_Threads_part(Thread):
         '''
         print(selectedFiguresSorted)
         '''
+        
         total = 0
         for i in range (self.lines_to_read)[self.iterator_line:]:
             counter = 0

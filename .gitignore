@@ -1,7 +1,3 @@
-InterfaceQt/Build
-Executable
-.vscode
-Capture
-
-**/~*
-**/*.*.pyc
+TabStats/Executable/*
+TabStats/InterfaceQt/*
+TabStats/LogiquePython/project_sources/__pycache__/*
